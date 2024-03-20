@@ -1,16 +1,16 @@
 /*
 CreateStructure.sql
 */
--- Проверка, существуе ли уже схема под которой я буду работать
+-- РџСЂРѕРІРµСЂРєР°, СЃСѓС‰РµСЃС‚РІСѓРµ Р»Рё СѓР¶Рµ СЃС…РµРјР° РїРѕРґ РєРѕС‚РѕСЂРѕР№ СЏ Р±СѓРґСѓ СЂР°Р±РѕС‚Р°С‚СЊ
 if not exists (select 1 from sys.schemas as s where s.name = 'dbo')
 begin
 	exec ('create schema dbo');
 end;
 
+ALTER DATABASE <database_name> CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-drop table dbo.SKU;
-
--- Проверка на существование, а затем создание необходимой нам таблицы наименований продуктов
+alter database dbo character set utf8 collate utf8_general_ci;
+-- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ, Р° Р·Р°С‚РµРј СЃРѕР·РґР°РЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕР№ РЅР°Рј С‚Р°Р±Р»РёС†С‹ РЅР°РёРјРµРЅРѕРІР°РЅРёР№ РїСЂРѕРґСѓРєС‚РѕРІ
 if object_id ('dbo.SKU') is null
 begin
 	create table dbo.SKU (
@@ -22,7 +22,7 @@ begin
 	)
 end;
 
--- Триггер, который будет генерировать код товара по правилу: s + ID товара
+-- РўСЂРёРіРіРµСЂ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РєРѕРґ С‚РѕРІР°СЂР° РїРѕ РїСЂР°РІРёР»Сѓ: s + ID С‚РѕРІР°СЂР°
 create or alter trigger dbo.tr_SKU_insert on dbo.SKU
 after insert
 as
@@ -34,7 +34,7 @@ begin
 	where ID = @LastID
 end;
 
--- Проверка на существование, а затем создание таблицы семьи, которая совершает покупки
+-- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ, Р° Р·Р°С‚РµРј СЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ СЃРµРјСЊРё, РєРѕС‚РѕСЂР°СЏ СЃРѕРІРµСЂС€Р°РµС‚ РїРѕРєСѓРїРєРё
 if object_id ('dbo.Family') is null
 begin
 	create table dbo.Family (
@@ -45,7 +45,7 @@ begin
 	)
 end;
 
--- Проверка на существование, а затем создание таблицы, описывающую корзину с заказом
+-- РџСЂРѕРІРµСЂРєР° РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ, Р° Р·Р°С‚РµРј СЃРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹, РѕРїРёСЃС‹РІР°СЋС‰СѓСЋ РєРѕСЂР·РёРЅСѓ СЃ Р·Р°РєР°Р·РѕРј
 if object_id ('dbo.Basket') is null
 begin
 	create table dbo.Basket (
@@ -64,27 +64,27 @@ begin
 	)
 end;
 
--- Тестовые данные для таблицы dbo.SKU
+-- РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ С‚Р°Р±Р»РёС†С‹ dbo.SKU
 insert into dbo.SKU (Name)
-values ('Товар1');
-
-insert into dbo.SKU (Name)
-values ('Товар2');
+values ('РўРѕРІР°СЂ1');
 
 insert into dbo.SKU (Name)
-values ('Товар3');
+values ('РўРѕРІР°СЂ2');
 
--- Тестовые данные для таблицы dbo.Family
+insert into dbo.SKU (Name)
+values ('РўРѕРІР°СЂ3');
+
+-- РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ С‚Р°Р±Р»РёС†С‹ dbo.Family
 insert into dbo.Family (SurName, BudgetValue)
-values ('Ивановы', 126430);
+values ('РРІР°РЅРѕРІС‹', 126430);
 
 insert into dbo.Family (SurName, BudgetValue)
-values ('Петровы', 301921);
+values ('РџРµС‚СЂРѕРІС‹', 301921);
 
 insert into dbo.Family (SurName, BudgetValue)
-values ('Гавриловы', 3129);
+values ('Р“Р°РІСЂРёР»РѕРІС‹', 3129);
 
--- Тестовые данные для таблицы dbo.Basket
+-- РўРµСЃС‚РѕРІС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ С‚Р°Р±Р»РёС†С‹ dbo.Basket
 insert into dbo.Basket (ID_SKU, ID_Family, Quantity, Value, DiscountValue)
 values (1, 1, 21, 210, 0);
 
